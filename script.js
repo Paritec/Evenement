@@ -374,7 +374,8 @@ const eventsData = [
 
 // Fonction pour calculer l'âge à partir de l'année de naissance
 function calculateAge(birthYear) {
-    const today = new Date();
+//const today = new Date();
+	const today = "2024-11-10";  
     return today.getFullYear() - birthYear;
 }
 
