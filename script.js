@@ -374,7 +374,7 @@ const eventsData = [
 
 // Fonction pour calculer l'âge à partir de l'année de naissance
 function calculateAge(birthYear) {
-//const today = new Date();
+     //const today = new Date();
 	const today = new Date("2024-11-10");  
     return today.getFullYear() - birthYear;
 }
@@ -400,7 +400,8 @@ function addEventToDOM(text, gender) {
 
 // Fonction pour charger et afficher les événements du jour et de demain
 function afficherEvenements(events) {
-    const today = new Date();
+    //const today = new Date();
+	const today = new Date("2024-11-10"); 
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
