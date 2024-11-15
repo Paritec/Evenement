@@ -19,26 +19,26 @@ function loadAndDisplayEvents() {
 
                 if (isSameDay(eventDate, today)) {
                     todayEvents.push({
-                        message: `Anniversaire de ${event.Prenom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`,
+                        message: `Anniversaire de ${event.Prénom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
                 if (isSameDay(eventDate, tomorrow)) {
                     tomorrowEvents.push({
-                        message: `Demain, Anniversaire de ${event.Prenom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`,
+                        message: `Demain, Anniversaire de ${event.Prénom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
 
                 if (isSameDay(feteDate, today)) {
                     todayEvents.push({
-                        message: `Fête de ${event.Prenom} ${event.Nom}`,
+                        message: `Fête de ${event.Prénom} ${event.Nom}`,
                         sexe: event.Sexe
                     });
                 }
                 if (isSameDay(feteDate, tomorrow)) {
                     tomorrowEvents.push({
-                        message: `Demain, Fête de ${event.Prenom} ${event.Nom}`,
+                        message: `Demain, Fête de ${event.Prénom} ${event.Nom}`,
                         sexe: event.Sexe
                     });
                 }
