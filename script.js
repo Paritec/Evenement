@@ -31,31 +31,41 @@ function parseCSV(csvText) {
     });
 }
 
-// Fonction pour afficher les événements
+// Fonction pour charger et afficher les événements du jour et de demain
 function afficherEvenements(events) {
-    const eventsContainer = document.getElementById("eventsContainer");
-    eventsContainer.innerHTML = ''; // Vider le contenu précédent
+    const today = new Date();
+	//const today = new Date("2024-11-10"); 
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
 
     events.forEach(event => {
-        const eventElement = document.createElement("div");
-        const age = calculateAge(event['Année_Naissance']);
-        eventElement.className = event['Sexe'] === 'Homme' ? 'event-homme' : 'event-femme';
+        const age = event.Année_Anniversaire ? calculateAge(event.Année_Anniversaire) : null;
 
-        // Formatage des informations de l'événement
-        eventElement.innerHTML = `
-            <p>${event['Nom']} ${event['Prénom']} - Anniversaire : ${event['Jour_Naissance']}/${event['Mois_Naissance']}, ${age} ans</p>
-            <p>Fête : ${event['Jour_Fête']}/${event['Mois_Fête']}</p>
-        `;
+        const todayEventText = age !== null ? `Anniversaire de ${event.Prénom} ${event.Nom} (${age} ans)` : `Fête de ${event.Prénom} ${event.Nom}`;
+        const tomorrowEventText = age !== null ? `Demain Anniversaire de ${event.Prénom} ${event.Nom} (${age} ans)` : `Demain Fête de ${event.Prénom} ${event.Nom}`;
 
-        eventsContainer.appendChild(eventElement);
+        // Vérifier les anniversaires
+        if (event.Jour_Anniversaire && event.Mois_Anniversaires) {
+            const eventDate = new Date(today.getFullYear(), event.Mois_Anniversaires - 1, event.Jour_Anniversaire);
+            if (eventDate.getDate() === today.getDate() && eventDate.getMonth() === today.getMonth()) {
+                addEventToDOM(`Anniversaire de ${event.Prénom} ${event.Nom} (${age} ans)`, event.Sexe);
+            } else if (eventDate.getDate() === tomorrow.getDate() && eventDate.getMonth() === tomorrow.getMonth()) {
+                addEventToDOM(`Demain Anniversaire de ${event.Prénom} ${event.Nom} (${age} ans)`, event.Sexe);
+            }
+        }
+
+        // Vérifier les fêtes
+        if (event.Jour_Fête && event.Mois_Fête) {
+            const feteDate = new Date(today.getFullYear(), event.Mois_Fête - 1, event.Jour_Fête);
+            if (feteDate.getDate() === today.getDate() && feteDate.getMonth() === today.getMonth()) {
+                addEventToDOM(`Fête de ${event.Prénom} ${event.Nom}`, event.Sexe);
+            } else if (feteDate.getDate() === tomorrow.getDate() && feteDate.getMonth() === tomorrow.getMonth()) {
+                addEventToDOM(`Demain Fête de ${event.Prénom} ${event.Nom}`, event.Sexe);
+            }
+        }
     });
 }
 
-// Fonction pour calculer l'âge
-function calculateAge(birthYear) {
-    const today = new Date();
-    return today.getFullYear() - birthYear;
-}
 
 // Charger les données de la feuille Google Sheets au chargement de la page
 document.addEventListener("DOMContentLoaded", loadSheetData);
