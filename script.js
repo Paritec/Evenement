@@ -1,5 +1,3 @@
-// URL du fichier CSV publié de Google Sheets
-//https://docs.google.com/spreadsheets/d/e/2PACX-1vRR-tdJ_UMTbpAFKRhtxzS_V6fnUVwfK2a4wQr1gcx0Fc5XRy8Lw5OpGkEKx10Kj-PJA7pix-Nmxr-p/pub?gid=0&single=true&output=csv
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1xVBY-Cpbtr64MbCJuzKHm3oAtf0Z8fbJmSRvf3SkswI/pub?output=csv';
 
 function loadAndDisplayEvents() {
@@ -20,17 +18,29 @@ function loadAndDisplayEvents() {
                 const feteDate = new Date(today.getFullYear(), event.Mois_Fête - 1, event.Jour_Fête);
 
                 if (isSameDay(eventDate, today)) {
-                    todayEvents.push(`Anniversaire de ${event.Prenom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`);
+                    todayEvents.push({
+                        message: `Anniversaire de ${event.Prenom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`,
+                        sexe: event.Sexe
+                    });
                 }
                 if (isSameDay(eventDate, tomorrow)) {
-                    tomorrowEvents.push(`Demain, Anniversaire de ${event.Prenom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`);
+                    tomorrowEvents.push({
+                        message: `Demain, Anniversaire de ${event.Prenom} ${event.Nom} ${calculateAge(event.Année_Naissance)} ans`,
+                        sexe: event.Sexe
+                    });
                 }
 
                 if (isSameDay(feteDate, today)) {
-                    todayEvents.push(`Fête de ${event.Prenom} ${event.Nom}`);
+                    todayEvents.push({
+                        message: `Fête de ${event.Prenom} ${event.Nom}`,
+                        sexe: event.Sexe
+                    });
                 }
                 if (isSameDay(feteDate, tomorrow)) {
-                    tomorrowEvents.push(`Demain, Fête de ${event.Prenom} ${event.Nom}`);
+                    tomorrowEvents.push({
+                        message: `Demain, Fête de ${event.Prenom} ${event.Nom}`,
+                        sexe: event.Sexe
+                    });
                 }
             });
 
@@ -47,7 +57,7 @@ function parseCSVData(csv) {
         const data = line.split(",");
         const event = {};
         headers.forEach((header, index) => {
-            event[header.trim()] = data[index].trim();
+            event[header.trim()] = data[index] ? data[index].trim() : "";
         });
         return event;
     });
@@ -76,8 +86,8 @@ function displayEvents(todayEvents, tomorrowEvents) {
 
         todayEvents.forEach(event => {
             const eventElement = document.createElement("p");
-            eventElement.innerText = event;
-            eventElement.style.color = event.includes("Anniversaire de") ? "blue" : "red";
+            eventElement.innerText = event.message;
+            eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
             container.appendChild(eventElement);
         });
     }
@@ -89,8 +99,8 @@ function displayEvents(todayEvents, tomorrowEvents) {
 
         tomorrowEvents.forEach(event => {
             const eventElement = document.createElement("p");
-            eventElement.innerText = event;
-            eventElement.style.color = event.includes("Anniversaire de") ? "blue" : "red";
+            eventElement.innerText = event.message;
+            eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
             container.appendChild(eventElement);
         });
     }
