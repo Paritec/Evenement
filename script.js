@@ -88,7 +88,7 @@ function displayEvents(todayEvents, tomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-			eventElement.style.fontSize = "20px"; 
+			eventElement.style.fontSize = "24px"; 
             container.appendChild(eventElement);
         });
     }
@@ -102,7 +102,7 @@ function displayEvents(todayEvents, tomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-			eventElement.style.fontSize = "20px"; 
+			eventElement.style.fontSize = "24px"; 
             container.appendChild(eventElement);
         });
     }
