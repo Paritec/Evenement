@@ -51,7 +51,7 @@ function loadAndDisplayEvents() {
 // Fonction pour analyser les données CSV en un tableau d'objets
 function parseCSVData(csv) {
     const lines = csv.split("\n").map(line => line.trim());
-    const headers = lines[0].split(",");
+    const headers = lines[4].split(",");
 
     return lines.slice(1).map(line => {
         const data = line.split(",");
