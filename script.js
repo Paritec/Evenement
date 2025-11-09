@@ -7,32 +7,36 @@ function loadAndDisplayEvents() {
             const today = new Date();
             const tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1);
+            const dayAfterTomorrow = new Date();
+            dayAfterTomorrow.setDate(today.getDate() + 2);
 
             const events = parseCSVData(csvData);
             const todayEvents = [];
             const tomorrowEvents = [];
+            const dayAfterTomorrowEvents = [];
 
-            // Filtrer les événements du jour et de demain
             events.forEach(event => {
                 const eventDate = new Date(today.getFullYear(), event.Mois_Naissance - 1, event.Jour_Naissance);
                 const feteDate = new Date(today.getFullYear(), event.Mois_Fête - 1, event.Jour_Fête);
 
+                // Aujourd'hui
                 if (isSameDay(eventDate, today)) {
                     todayEvents.push({
                         message: `Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
-                if (isSameDay(eventDate, tomorrow)) {
-                    tomorrowEvents.push({
-                        message: `Demain, Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
+                if (isSameDay(feteDate, today)) {
+                    todayEvents.push({
+                        message: `Fête de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"}`,
                         sexe: event.Sexe
                     });
                 }
 
-                if (isSameDay(feteDate, today)) {
-                    todayEvents.push({
-                        message: `Fête de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"}`,
+                // Demain
+                if (isSameDay(eventDate, tomorrow)) {
+                    tomorrowEvents.push({
+                        message: `Demain, Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
@@ -42,9 +46,23 @@ function loadAndDisplayEvents() {
                         sexe: event.Sexe
                     });
                 }
+
+                // Après-demain
+                if (isSameDay(eventDate, dayAfterTomorrow)) {
+                    dayAfterTomorrowEvents.push({
+                        message: `Après-demain, Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
+                        sexe: event.Sexe
+                    });
+                }
+                if (isSameDay(feteDate, dayAfterTomorrow)) {
+                    dayAfterTomorrowEvents.push({
+                        message: `Après-demain, Fête de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"}`,
+                        sexe: event.Sexe
+                    });
+                }
             });
 
-            displayEvents(todayEvents, tomorrowEvents);
+            displayEvents(todayEvents, tomorrowEvents, dayAfterTomorrowEvents);
         });
 }
 
@@ -75,7 +93,7 @@ function calculateAge(birthYear) {
 }
 
 // Fonction pour afficher les événements avec formatage
-function displayEvents(todayEvents, tomorrowEvents) {
+function displayEvents(todayEvents, tomorrowEvents, dayAfterTomorrowEvents) {
     const container = document.getElementById("events");
     container.innerHTML = "";
 
@@ -88,7 +106,7 @@ function displayEvents(todayEvents, tomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-			eventElement.style.fontSize = "24px"; 
+            eventElement.style.fontSize = "24px"; 
             container.appendChild(eventElement);
         });
     }
@@ -102,7 +120,21 @@ function displayEvents(todayEvents, tomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-			eventElement.style.fontSize = "24px"; 
+            eventElement.style.fontSize = "24px"; 
+            container.appendChild(eventElement);
+        });
+    }
+
+    if (dayAfterTomorrowEvents.length > 0) {
+        const dayAfterTomorrowHeader = document.createElement("h3");
+        dayAfterTomorrowHeader.innerText = "Événements après-demain";
+        container.appendChild(dayAfterTomorrowHeader);
+
+        dayAfterTomorrowEvents.forEach(event => {
+            const eventElement = document.createElement("p");
+            eventElement.innerText = event.message;
+            eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
+            eventElement.style.fontSize = "24px"; 
             container.appendChild(eventElement);
         });
     }
