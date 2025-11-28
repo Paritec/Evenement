@@ -10,12 +10,20 @@ function loadAndDisplayEvents() {
             const dayAfterTomorrow = new Date();
             dayAfterTomorrow.setDate(today.getDate() + 2);
 
+            // Appel à la fonction corrigée pour parser les données
             const events = parseCSVData(csvData);
+            
             const todayEvents = [];
             const tomorrowEvents = [];
             const dayAfterTomorrowEvents = [];
 
             events.forEach(event => {
+                // Assurez-vous que les données nécessaires existent et sont valides
+                if (!event["Mois_Naissance"] || !event["Jour_Naissance"]) {
+                    // Ignorer les lignes de données invalides ou vides
+                    return; 
+                }
+
                 const eventDate = new Date(today.getFullYear(), event.Mois_Naissance - 1, event.Jour_Naissance);
                 const feteDate = new Date(today.getFullYear(), event.Mois_Fête - 1, event.Jour_Fête);
 
@@ -68,14 +76,23 @@ function loadAndDisplayEvents() {
 
 // Fonction pour analyser les données CSV en un tableau d'objets
 function parseCSVData(csv) {
-    const lines = csv.split("\n").map(line => line.trim());
-    const headers = lines[4].split(",");
+    // Sépare les lignes et retire les lignes vides
+    const lines = csv.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+    
+    // ⭐ MODIFICATION CLÉ 1 : Les en-têtes sont dans la LIGNE 5 du CSV (index 4)
+    const headers = lines[4].split(",").map(header => header.trim());
 
-    return lines.slice(1).map(line => {
+    // ⭐ MODIFICATION CLÉ 2 : Le traitement des données commence à la LIGNE 6 du CSV (index 5)
+    // Ceci ignore les 4 lignes de configuration + la ligne d'en-tête
+    return lines.slice(5).map(line => { 
         const data = line.split(",");
         const event = {};
+        
         headers.forEach((header, index) => {
-            event[header.trim()] = data[index] ? data[index].trim() : "";
+            // Assure la robustesse contre les colonnes manquantes
+            if (header) { 
+                event[header] = data[index] ? data[index].trim() : "";
+            }
         });
         return event;
     });
@@ -89,7 +106,9 @@ function isSameDay(date1, date2) {
 // Fonction pour calculer l'âge
 function calculateAge(birthYear) {
     const today = new Date();
-    return today.getFullYear() - birthYear;
+    // Gère le cas où l'année de naissance n'est pas un nombre valide
+    if (isNaN(parseInt(birthYear))) return "??"; 
+    return today.getFullYear() - parseInt(birthYear);
 }
 
 // Fonction pour afficher les événements avec formatage
@@ -106,7 +125,7 @@ function displayEvents(todayEvents, tomorrowEvents, dayAfterTomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-            eventElement.style.fontSize = "24px"; 
+            eventElement.style.fontSize = "24px";  
             container.appendChild(eventElement);
         });
     }
@@ -120,7 +139,7 @@ function displayEvents(todayEvents, tomorrowEvents, dayAfterTomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-            eventElement.style.fontSize = "24px"; 
+            eventElement.style.fontSize = "24px";  
             container.appendChild(eventElement);
         });
     }
@@ -134,7 +153,7 @@ function displayEvents(todayEvents, tomorrowEvents, dayAfterTomorrowEvents) {
             const eventElement = document.createElement("p");
             eventElement.innerText = event.message;
             eventElement.style.color = event.sexe === "Homme" ? "blue" : "red";
-            eventElement.style.fontSize = "24px"; 
+            eventElement.style.fontSize = "24px";  
             container.appendChild(eventElement);
         });
     }
