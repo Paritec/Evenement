@@ -1,28 +1,16 @@
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1xVBY-Cpbtr64MbCJuzKHm3oAtf0Z8fbJmSRvf3SkswI/pub?output=csv';
 
 function loadAndDisplayEvents() {
-
     fetch(SHEET_CSV_URL)
         .then(response => response.text())
         .then(csvData => {
-            
-            // --- NOUVEAU CODE POUR IGNORER LES LIGNES DE CONFIGURATION (1 à 4) ---
-            const lines = csvData.split('\n');
-            
-            // slice(4) retire les 4 premières lignes (index 0 à 3)
-            // La ligne à l'index 4 (votre ligne 5 : les en-têtes) devient la première
-            const dataLines = lines.slice(4).join('\n');
-            // ---------------------------------------------------------------------
-
             const today = new Date();
             const tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1);
             const dayAfterTomorrow = new Date();
             dayAfterTomorrow.setDate(today.getDate() + 2);
 
-            // ATTENTION : On utilise dataLines (les données nettoyées) ici !
-            const events = parseCSVData(dataLines);
-            
+            const events = parseCSVData(csvData);
             const todayEvents = [];
             const tomorrowEvents = [];
             const dayAfterTomorrowEvents = [];
