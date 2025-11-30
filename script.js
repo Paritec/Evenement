@@ -32,8 +32,12 @@ function loadAndDisplayEvents() {
             // 2. LOGIQUE: Filtrer les événements avec validation STRICTE et INDÉPENDANTE
             events.forEach(event => {
                 
-                // Conditions de base: Prénom et Nom doivent être présents pour TOUT événement
-                const baseConditions = event["Prénom"] && event["Nom"];
+                // NOUVELLE VÉRIFICATION BASE : Nettoyage et vérification de la longueur des chaînes
+                const prenom = (event["Prénom"] || "").trim();
+                const nom = (event["Nom"] || "").trim();
+                
+                // Conditions de base: Nom et Prénom doivent avoir une longueur > 0
+                const baseConditions = prenom.length > 0 && nom.length > 0;
 
                 // --- A. GESTION DE L'ANNIVERSAIRE ---
                 let eventDate = null;
@@ -62,7 +66,9 @@ function loadAndDisplayEvents() {
                 if (eventDate) {
                     const age = calculateAge(event.Année_Naissance);
                     const ageText = age !== "??" ? ` ${age} ans` : "";
-                    const messageBase = `${event["Prénom"]} ${event.Nom}${ageText}`;
+                    
+                    // UTILISATION DES VARIABLES NETTOYÉES
+                    const messageBase = `${prenom} ${nom}${ageText}`;
                     
                     if (isSameDay(eventDate, today)) {
                         todayEvents.push({
@@ -86,7 +92,8 @@ function loadAndDisplayEvents() {
 
                 // --- AJOUT DES ÉVÉNEMENTS VALIDÉS : FÊTES ---
                 if (feteDate) {
-                    const messageBase = `${event["Prénom"]} ${event.Nom}`;
+                    // UTILISATION DES VARIABLES NETTOYÉES
+                    const messageBase = `${prenom} ${nom}`;
 
                     if (isSameDay(feteDate, today)) {
                         todayEvents.push({
