@@ -26,31 +26,32 @@ function loadAndDisplayEvents() {
             const tomorrowEvents = [];
             const dayAfterTomorrowEvents = [];
 
-            // 2. NOUVELLE LOGIQUE: Filtrer les événements avec validation stricte
+            // 2. LOGIQUE: Filtrer les événements avec validation STRICTE et INDÉPENDANTE
             events.forEach(event => {
                 
                 // Conditions de base: Prénom et Nom doivent être présents pour TOUT événement
                 const baseConditions = event["Prénom"] && event["Nom"];
 
-                // A. CONDITIONS ANNIVERSAIRE: Prénom, Nom, Année, Mois, Jour
-                const anivConditions = baseConditions &&
-                                       event.Année_Naissance > 0 && // Vérifie que l'année est un nombre > 0
+                // --- A. GESTION DE L'ANNIVERSAIRE ---
+                let eventDate = null;
+                // Anniversaire complet : Nom/Prénom + Année/Mois/Jour > 0
+                const anivComplet = baseConditions &&
+                                       event.Année_Naissance > 0 &&
                                        event.Mois_Naissance > 0 && 
                                        event.Jour_Naissance > 0;
                 
-                let eventDate = null;
-                if (anivConditions) {
-                    // Les mois JS sont basés sur 0 (Janvier=0), d'où le '- 1'
+                if (anivComplet) {
                     eventDate = new Date(today.getFullYear(), event.Mois_Naissance - 1, event.Jour_Naissance);
                 }
 
-                // B. CONDITIONS FÊTE: Prénom, Nom, Mois, Jour
-                const feteConditions = baseConditions &&
+                // --- B. GESTION DE LA FÊTE ---
+                let feteDate = null;
+                // Fête complète : Nom/Prénom + Mois/Jour > 0
+                const feteComplet = baseConditions &&
                                        event.Mois_Fête > 0 &&
                                        event.Jour_Fête > 0;
                                        
-                let feteDate = null;
-                if (feteConditions) {
+                if (feteComplet) {
                     feteDate = new Date(today.getFullYear(), event.Mois_Fête - 1, event.Jour_Fête);
                 }
 
