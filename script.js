@@ -27,16 +27,28 @@ function loadAndDisplayEvents() {
                 const eventDate = new Date(today.getFullYear(), event.Mois_Naissance - 1, event.Jour_Naissance);
                 const feteDate = new Date(today.getFullYear(), event.Mois_Fête - 1, event.Jour_Fête);
 
+                // --- Logique de liaison de/d' ---
+                const prenom = event["Prénom"] || "Prénom inconnu";
+                const nom = event.Nom || "Nom inconnu";
+                let liaison = " de ";
+                if (prenom.length > 0) {
+                    const premiereLettre = prenom.charAt(0).toUpperCase();
+                    const voyelles = ["A", "E", "I", "O", "U", "Y", "É", "È", "Ê", "Ë", "À", "Â", "Î", "Ï", "Ô", "Û", "Ù"];
+                    if (voyelles.includes(premiereLettre)) {
+                        liaison = " d'";
+                    }
+                }
+
                 // Aujourd'hui
                 if (isSameDay(eventDate, today)) {
                     todayEvents.push({
-                        message: `Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
+                        message: `Anniversaire${liaison}${prenom} ${nom} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
                 if (isSameDay(feteDate, today)) {
                     todayEvents.push({
-                        message: `Fête de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"}`,
+                        message: `Fête${liaison}${prenom} ${nom}`,
                         sexe: event.Sexe
                     });
                 }
@@ -44,13 +56,13 @@ function loadAndDisplayEvents() {
                 // Demain
                 if (isSameDay(eventDate, tomorrow)) {
                     tomorrowEvents.push({
-                        message: `Demain, Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
+                        message: `Demain, Anniversaire${liaison}${prenom} ${nom} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
                 if (isSameDay(feteDate, tomorrow)) {
                     tomorrowEvents.push({
-                        message: `Demain, Fête de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"}`,
+                        message: `Demain, Fête${liaison}${prenom} ${nom}`,
                         sexe: event.Sexe
                     });
                 }
@@ -58,13 +70,13 @@ function loadAndDisplayEvents() {
                 // Après-demain
                 if (isSameDay(eventDate, dayAfterTomorrow)) {
                     dayAfterTomorrowEvents.push({
-                        message: `Après-demain, Anniversaire de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"} ${calculateAge(event.Année_Naissance)} ans`,
+                        message: `Après-demain, Anniversaire${liaison}${prenom} ${nom} ${calculateAge(event.Année_Naissance)} ans`,
                         sexe: event.Sexe
                     });
                 }
                 if (isSameDay(feteDate, dayAfterTomorrow)) {
                     dayAfterTomorrowEvents.push({
-                        message: `Après-demain, Fête de ${event["Prénom"] || "Prénom inconnu"} ${event.Nom || "Nom inconnu"}`,
+                        message: `Après-demain, Fête${liaison}${prenom} ${nom}`,
                         sexe: event.Sexe
                     });
                 }
